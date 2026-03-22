@@ -1,6 +1,10 @@
 server:
   port: 8081
 
+jwt:
+  secret: 2jf2bSoCeeqhA9ok6tje/nNa7r1+5pSovUbN+z4FthBDedYYKSsUmq9ZbBnlUZZ58/+8gLnGTDxo8a5WWV1f/Q==
+  expiration: 3600000 # 1 hour in milliseconds
+
 spring:
   application:
     name: auth-service

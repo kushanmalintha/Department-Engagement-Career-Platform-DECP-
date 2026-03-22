@@ -27,4 +27,9 @@ public class AuthController {
         String token = authService.login(request);
         return new AuthResponse(token);
     }
+    
+    @GetMapping("/me")
+    public String getCurrentUser() {
+        return "You are authenticated!";
+    }
 }
