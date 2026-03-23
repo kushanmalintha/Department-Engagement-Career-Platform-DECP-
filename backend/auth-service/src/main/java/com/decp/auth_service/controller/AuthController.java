@@ -28,6 +28,7 @@ public class AuthController {
         return new AuthResponse(token);
     }
     
+    //test endpoint to verify authentication
     @GetMapping("/me")
     public String getCurrentUser() {
         return "You are authenticated!";

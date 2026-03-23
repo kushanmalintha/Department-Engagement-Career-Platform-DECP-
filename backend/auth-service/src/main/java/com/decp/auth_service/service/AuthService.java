@@ -21,22 +21,25 @@ public class AuthService {
     }
 
     public void register(AuthRequest request) {
+        if (userRepository.findByEmail(request.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("Email already registered");
+        }
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(encoder.encode(request.getPassword()));
-        user.setRole("USER");
+        user.setRole("STUDENT");
 
         userRepository.save(user);
     }
 
     public String login(AuthRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("Invalid credentials"));
 
         if (!encoder.matches(request.getPassword(), user.getPassword())) {
-            throw new RuntimeException("Invalid password");
+            throw new RuntimeException("Invalid credentials");
         }
 
-        return jwtUtil.generateToken(user.getEmail());
+        return jwtUtil.generateToken(user.getEmail(), user.getRole());
     }
 }

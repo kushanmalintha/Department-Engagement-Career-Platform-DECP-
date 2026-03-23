@@ -18,15 +18,14 @@ public class JwtUtil {
             @Value("${jwt.secret}") String secret,
             @Value("${jwt.expiration}") long expiration
     ) {
-        System.out.println("SECRET: " + secret);
-        System.out.println("EXPIRATION: " + expiration);
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
         this.expiration = expiration;
     }
 
-    public String generateToken(String email) {
+    public String generateToken(String email, String role) {
         return Jwts.builder()
                 .setSubject(email)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expiration))
                 .signWith(secretKey)
@@ -40,6 +39,15 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+    }
+
+    public String extractRole(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody()
+                .get("role", String.class);
     }
 
     public boolean validateToken(String token) {
